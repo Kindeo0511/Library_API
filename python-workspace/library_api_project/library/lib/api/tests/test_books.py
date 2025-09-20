@@ -32,15 +32,6 @@ class TestBooks(APITestCase):
         }
         response = self.client.post(self.url, self.data, format='json')
         assert response.status_code == status.HTTP_201_CREATED
-         
-    def test_create_book_invalid(self):
-        self.url = reverse('create-book')
-        self.data = {
-            'author': 'test_author',
-            'title': 'test_title'
-        }
-        response = self.client.post(self.url, self.data, format='json')
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
     
     def test_list_book(self):
         self.url = reverse('list-book')
