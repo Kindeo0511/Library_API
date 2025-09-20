@@ -8,8 +8,7 @@ A Django REST API for managing books, user authentication, and posting book revi
 
 1. Create a virtual environment and activate it
    
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+ On Windows: source venv\Scripts\activate
    
 2. Install dependencies:
     pip install django djangorestframework djangorestframework-simplejwt drf-yasg pytest pytest-django
