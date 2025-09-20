@@ -38,7 +38,7 @@ class TestBookReview(APITestCase):
             'user': self.user.pk,
             'book': self.book.pk,
             'rating': 1,
-            'comment': 'create review comment'
+            'comment': 'create review comments'
         }
         response = self.client.post(url, data, format='json')
         assert response.status_code == status.HTTP_201_CREATED
