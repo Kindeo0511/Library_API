@@ -4,23 +4,20 @@ from rest_framework.request import Request
 from rest_framework import status
 from library.lib.services.book_service import get_book_by_id
 from library.lib.services.book_review import create_review, get_review_by_id
-from library.lib.serializers.serializer import ReviewSerializer
+from library.lib.serializers.serializer import ReviewSerializer, ReviewCreateSerializer
 from rest_framework.permissions import IsAuthenticated
 from library.models import BookModel  
 from drf_yasg.utils import swagger_auto_schema
 
 class CreateReviews(APIView):
     permission_classes = [IsAuthenticated]
-    @swagger_auto_schema(request_body=ReviewSerializer, responses={201: ReviewSerializer})
-
+    
+    @swagger_auto_schema(request_body=ReviewCreateSerializer, responses={201: ReviewSerializer})
     def post(self, request: Request, book_id:int) -> Response:
-        serializer = ReviewSerializer(data = request.data)
+        serializer = ReviewCreateSerializer(data = request.data)
 
         if serializer.is_valid():
-            try:
-                book = get_book_by_id(book_id)
-            except BookModel.DoesNotExist:
-                return Response({"error": "Book not found"}, status=status.HTTP_404_NOT_FOUND)
+            book = get_book_by_id(book_id)
             book_review = create_review(serializer.validated_data, book, request.user)
             return Response(ReviewSerializer(book_review).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
