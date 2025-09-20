@@ -50,8 +50,8 @@ class TestBooks(APITestCase):
         assert len(response.data) >= 1
     
     def test_get_book_by_id(self):
-        self.url = reverse('get-book', kwargs={'book_id': self.book.pk})
-        response = self.client.get(self.url)
+        url = reverse('get-book', kwargs={'book_id': self.book.pk})
+        response = self.client.get(url)
         assert response.status_code == status.HTTP_200_OK
         assert response.data['id'] == self.book.pk
         assert response.data['title'] == self.book.title
@@ -59,22 +59,22 @@ class TestBooks(APITestCase):
         assert response.data['published_date'] == self.book.published_date
     
     def test_update_book_valid(self):
-        self.url = reverse('update-book', kwargs={'book_id': self.book.pk})
-        self.book_data = {
+        url = reverse('update-book', kwargs={'book_id': self.book.pk})
+        updated_data = {
             'title': 'update_author',
             'author': 'update_title',
             'published_date': '2024-01-01'
         }
 
-        response = self.client.put(self.url, self.book_data, format='json')
+        response = self.client.put(url, updated_data, format='json')
         
         assert response.status_code == status.HTTP_200_OK
-        assert response.data['title'] == self.book_data['title']
-        assert response.data['author'] == self.book_data['author']
-        assert response.data['published_date']  == self.book_data['published_date']
+        assert response.data['title'] == updated_data['title']
+        assert response.data['author'] == updated_data['author']
+        assert response.data['published_date']  == updated_data['published_date']
     
 
-    def test_delete_task(self):
+    def test_delete_book(self):
         self.url = reverse('delete-book', kwargs={'book_id': self.book.pk})
         
         response = self.client.delete(self.url)

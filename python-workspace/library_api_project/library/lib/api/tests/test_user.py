@@ -28,7 +28,6 @@ class TestUser(APITestCase):
     def test_user_registration_invalid(self):
         self.url = reverse('auth-register')
         self.data = {
-            'username': 'test',
             'first_name': 'test',
             'last_name': 'test'
         }

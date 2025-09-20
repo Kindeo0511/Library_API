@@ -2,7 +2,7 @@ from rest_framework import serializers
 from library.models import *
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=False)
+    password = serializers.CharField(write_only=True)
 
     class Meta:
         model = UserModel
@@ -16,7 +16,7 @@ class BookSerializer(serializers.ModelSerializer):
 )
     class Meta:
         model = BookModel
-        fields = ['title', 'author', 'published_date']
+        fields = ['id','title', 'author', 'published_date']
 
 
 class ReviewSerializer(serializers.ModelSerializer):

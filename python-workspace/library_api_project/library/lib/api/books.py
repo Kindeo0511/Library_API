@@ -51,6 +51,7 @@ class UpdateBook(APIView):
             return Response(BookSerializer(update).data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    @swagger_auto_schema(request_body=BookSerializer, responses={201: BookSerializer})
     def patch(self,request, book_id: int) -> Response:
         book = get_book_by_id(book_id)
         serializer = BookSerializer(book, data = request.data, partial=True)
@@ -62,6 +63,8 @@ class UpdateBook(APIView):
 
 class DeleteBook(APIView):
     permission_classes = [IsAuthenticated]
+    
+    @swagger_auto_schema(request_body=BookSerializer, responses={201: BookSerializer})
     def delete(self, request, book_id:int) -> Response:
         book = get_book_by_id(book_id)
         delete_book(book)
