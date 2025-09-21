@@ -27,38 +27,41 @@ class CreateBook(APIView):
         serializer  = BookSerializer(data = request.data)
 
         if serializer.is_valid():
-            book = create_book(serializer.validated_data)           
-            return Response(BookSerializer(book).data, status=status.HTTP_201_CREATED)
+            book = create_book(serializer.validated_data) 
+            serializer = BookSerializer(book)          
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class GetBookById(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, book_id:int) -> Response:
 
-        BookModel = get_book_by_id(book_id)
-        serializer = BookSerializer(BookModel)
+        book = get_book_by_id(book_id)
+        serializer = BookSerializer(book)
         return Response(serializer.data,status=status.HTTP_200_OK)
     
 class UpdateBook(APIView):
     permission_classes = [IsAuthenticated]
-    @swagger_auto_schema(request_body=BookSerializer, responses={201: BookSerializer})
+    @swagger_auto_schema(request_body=BookSerializer, responses={200: BookSerializer})
     def put(self,request, book_id:int) -> Response:
         book = get_book_by_id(book_id)
         serializer = BookSerializer(book, data = request.data)
 
         if serializer.is_valid():
-            update = update_book(book, serializer.validated_data)
-            return Response(BookSerializer(update).data, status=status.HTTP_200_OK)
+            updated_book = update_book(book, serializer.validated_data)
+            serializer = BookSerializer(updated_book)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    @swagger_auto_schema(request_body=BookSerializer, responses={201: BookSerializer})
+    @swagger_auto_schema(request_body=BookSerializer, responses={200: BookSerializer})
     def patch(self,request, book_id: int) -> Response:
         book = get_book_by_id(book_id)
         serializer = BookSerializer(book, data = request.data, partial=True)
 
         if serializer.is_valid ():
-            update = update_book(book, serializer.validated_data)
-            return Response (BookSerializer(update).data, status=status.HTTP_200_OK )
+            updated_book = update_book(book, serializer.validated_data)
+            serializer = BookSerializer(updated_book)
+            return Response (BookSerializer(updated_book).data, status=status.HTTP_200_OK )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DeleteBook(APIView):

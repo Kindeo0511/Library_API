@@ -12,63 +12,48 @@ class TestUser(APITestCase):
             'first_name': 'testfirstname',
             'last_name': 'testlastname'
         }
-        self.user = UserModel.objects.create(**self.user_data) 
+        self.user = UserModel.objects.create_user(**self.user_data) 
   
+        self.login_url = reverse('auth-login')
+        self.register_url =  reverse('auth-register')
+
     def test_user_registration(self):
-        self.url = reverse('auth-register')
-        self.data = {
+        data = {
             'username': 'test',
             'password': 'test',
             'first_name': 'test',
             'last_name': 'test'
         }
-        response = self.client.post(self.url, self.data, format='json')
+        response = self.client.post(self.register_url, data, format='json')
         assert response.status_code == status.HTTP_201_CREATED
     
     def test_user_registration_invalid(self):
-        self.url = reverse('auth-register')
-        self.data = {
+        data = {
             'first_name': 'test',
             'last_name': 'test'
         }
-        response = self.client.post(self.url, self.data, format='json')
+        response = self.client.post(self.register_url, data, format='json')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
     
     def test_user_login(self):
 
-        UserModel.objects.create_user(
-            username='loginuser',
-            password='pass123',
-            first_name='kindeo',
-            last_name='nikdo'
-        )
-
-        self.url = reverse('auth-login')
         data = {
-            'username': 'loginuser',
-            'password': 'pass123'
+            'username': 'testuser',
+            'password': 'testpassword'
         }
 
-        response = self.client.post(self.url, data, format='json')
+        response = self.client.post(self.login_url, data, format='json')
         assert response.status_code == status.HTTP_200_OK
         assert 'access' in response.data
         assert 'refresh' in response.data
         
     def test_user_invalid_login(self):
-        UserModel.objects.create_user(
-        username='loginuser',
-        password='pass123',
-        first_name='kindeo',
-        last_name='nikdo'
-    )
-
-        self.url = reverse('auth-login')
         data = {
             'username': 'loginuser',
             'password': 'wrongpassword'
         }
 
-        response = self.client.post(self.url, data, format='json')
+        response = self.client.post(self.login_url, data, format='json')
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert 'access' not in response.data

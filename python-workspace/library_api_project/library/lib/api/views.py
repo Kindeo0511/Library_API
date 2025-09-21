@@ -16,7 +16,8 @@ class RegisterUser(APIView):
 
         if serializer.is_valid():
             user = register_user(serializer.validated_data)
-            return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
+            serializer = UserSerializer(user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 

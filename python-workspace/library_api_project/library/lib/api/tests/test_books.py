@@ -24,19 +24,19 @@ class TestBooks(APITestCase):
         self.book = BookModel.objects.create(**self.book_data)
     
     def test_create_book(self):
-        self.url = reverse('create-book')
-        self.data = {
+        url = reverse('create-book')
+        data = {
             'author': 'test_author',
             'title': 'test_title',
             'published_date': '2025-09-20'
         }
-        response = self.client.post(self.url, self.data, format='json')
+        response = self.client.post(url, data, format='json')
         assert response.status_code == status.HTTP_201_CREATED
     
     def test_list_book(self):
-        self.url = reverse('list-book')
+        url = reverse('list-book')
         
-        response = self.client.get(self.url)
+        response = self.client.get(url)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) >= 1
     
@@ -66,8 +66,8 @@ class TestBooks(APITestCase):
     
 
     def test_delete_book(self):
-        self.url = reverse('delete-book', kwargs={'book_id': self.book.pk})
+        url = reverse('delete-book', kwargs={'book_id': self.book.pk})
         
-        response = self.client.delete(self.url)
+        response = self.client.delete(url)
         assert response.status_code == status.HTTP_204_NO_CONTENT
         assert BookModel.objects.count() == 0

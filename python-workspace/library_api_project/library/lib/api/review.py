@@ -19,7 +19,8 @@ class CreateReviews(APIView):
         if serializer.is_valid():
             book = get_book_by_id(book_id)
             book_review = create_review(serializer.validated_data, book, request.user)
-            return Response(ReviewSerializer(book_review).data, status=status.HTTP_201_CREATED)
+            serializer = ReviewSerializer(book_review)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def get(self, request, book_id: int) -> Response:
